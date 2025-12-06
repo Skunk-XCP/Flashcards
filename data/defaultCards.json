@@ -1,0 +1,126 @@
+{
+  "decks": [
+    {
+      "id": "deck-1",
+      "name": "Anglais - Vocabulaire de base",
+      "description": "Mots essentiels en anglais",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "deck-2",
+      "name": "Espagnol - Verbes courants",
+      "description": "Conjugaison des verbes espagnols",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "deck-3",
+      "name": "Programmation - JavaScript",
+      "description": "Concepts fondamentaux de JavaScript",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "cards": [
+    {
+      "id": "card-1",
+      "front": "Hello",
+      "back": "Bonjour",
+      "deckId": "deck-1",
+      "isFavorite": false,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "card-2",
+      "front": "Goodbye",
+      "back": "Au revoir",
+      "deckId": "deck-1",
+      "isFavorite": false,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "card-3",
+      "front": "Thank you",
+      "back": "Merci",
+      "deckId": "deck-1",
+      "isFavorite": true,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "card-4",
+      "front": "Please",
+      "back": "S'il vous plaît",
+      "deckId": "deck-1",
+      "isFavorite": false,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "card-5",
+      "front": "Yes",
+      "back": "Oui",
+      "deckId": "deck-1",
+      "isFavorite": false,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "card-6",
+      "front": "Hablar (présent, yo)",
+      "back": "Hablo",
+      "deckId": "deck-2",
+      "isFavorite": false,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "card-7",
+      "front": "Comer (présent, tú)",
+      "back": "Comes",
+      "deckId": "deck-2",
+      "isFavorite": false,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "card-8",
+      "front": "Vivir (présent, él/ella)",
+      "back": "Vive",
+      "deckId": "deck-2",
+      "isFavorite": true,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "card-9",
+      "front": "Qu'est-ce qu'une closure en JavaScript ?",
+      "back": "Une fonction qui a accès aux variables de sa portée externe, même après que cette portée ait été fermée",
+      "deckId": "deck-3",
+      "isFavorite": true,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "card-10",
+      "front": "Quelle est la différence entre let et const ?",
+      "back": "let permet de réassigner une valeur, const ne le permet pas (valeur constante)",
+      "deckId": "deck-3",
+      "isFavorite": false,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "card-11",
+      "front": "Qu'est-ce que le hoisting ?",
+      "back": "Le mécanisme par lequel les déclarations de variables et fonctions sont déplacées en haut de leur portée avant l'exécution",
+      "deckId": "deck-3",
+      "isFavorite": false,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
