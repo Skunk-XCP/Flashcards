@@ -239,7 +239,7 @@ export default function SettingsPage() {
                 <textarea
                   value={exportText}
                   readOnly
-                  className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 font-mono text-xs"
+                  className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-black font-mono text-xs"
                   rows={8}
                 />
               </div>
