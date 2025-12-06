@@ -6,6 +6,8 @@ const STORAGE_KEYS = {
   CARDS: 'flashcards_cards',
   STATS: 'flashcards_stats',
   SETTINGS: 'flashcards_settings',
+  SESSION_STATS: 'flashcards_session_stats',
+  WRONG_CARDS: 'flashcards_wrong_cards',
 };
 
 // Vérifier si on est côté client
@@ -142,6 +144,40 @@ export function getSettings(): AppSettings {
 export function saveSettings(settings: AppSettings): void {
   if (!isClient) return;
   localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+}
+
+// ===== SESSION STATS =====
+
+export interface SessionStats {
+  correct: number;
+  incorrect: number;
+}
+
+export function getSessionStats(): SessionStats {
+  if (!isClient) return { correct: 0, incorrect: 0 };
+  const data = localStorage.getItem(STORAGE_KEYS.SESSION_STATS);
+  return data ? JSON.parse(data) : { correct: 0, incorrect: 0 };
+}
+
+export function saveSessionStats(stats: SessionStats): void {
+  if (!isClient) return;
+  localStorage.setItem(STORAGE_KEYS.SESSION_STATS, JSON.stringify(stats));
+}
+
+export function resetSessionStats(): void {
+  if (!isClient) return;
+  localStorage.setItem(STORAGE_KEYS.SESSION_STATS, JSON.stringify({ correct: 0, incorrect: 0 }));
+}
+
+export function getWrongCards(): string[] {
+  if (!isClient) return [];
+  const data = localStorage.getItem(STORAGE_KEYS.WRONG_CARDS);
+  return data ? JSON.parse(data) : [];
+}
+
+export function saveWrongCards(cardIds: string[]): void {
+  if (!isClient) return;
+  localStorage.setItem(STORAGE_KEYS.WRONG_CARDS, JSON.stringify(cardIds));
 }
 
 // ===== IMPORT / EXPORT =====

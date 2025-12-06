@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getCards, getDecks, saveCard, updateCardStats } from '../lib/storage';
+import { getCards, getDecks, getSessionStats, getWrongCards, resetSessionStats, saveCard, saveSessionStats, saveWrongCards, updateCardStats } from '../lib/storage';
 import { Deck, Flashcard } from '../lib/types';
 import { shuffle } from '../lib/utils';
 import StatsSummary from './_components/StatsSummary';
@@ -18,7 +18,7 @@ export default function RevisionPage() {
   const [onlyWrong, setOnlyWrong] = useState(false);
   const [onlyFavorites, setOnlyFavorites] = useState(false);
   const [wrongCards, setWrongCards] = useState<Set<string>>(new Set());
-  const [sessionStats, setSessionStats] = useState({ correct: 0, incorrect: 0 });
+  const [sessionStats, setSessionStats] = useState(getSessionStats());
   const [multiSelection, setMultiSelection] = useState(false);
   const [showDeckSelection, setShowDeckSelection] = useState(true);
   const [showOptions, setShowOptions] = useState(true);
@@ -33,6 +33,13 @@ export default function RevisionPage() {
     const loadedCards = getCards();
     setDecks(loadedDecks);
     setAllCards(loadedCards);
+    
+    // Charger les stats de session et les cartes difficiles
+    const loadedSessionStats = getSessionStats();
+    setSessionStats(loadedSessionStats);
+    
+    const loadedWrongCards = getWrongCards();
+    setWrongCards(new Set(loadedWrongCards));
     
     // Sélectionner le premier deck par défaut
     if (loadedDecks.length > 0 && selectedDeckIds.length === 0) {
@@ -78,13 +85,16 @@ export default function RevisionPage() {
     if (!currentCard) return;
     
     updateCardStats(currentCard.id, true);
-    setSessionStats(prev => ({ ...prev, correct: prev.correct + 1 }));
+    const newStats = { ...sessionStats, correct: sessionStats.correct + 1 };
+    setSessionStats(newStats);
+    saveSessionStats(newStats);
     
     // Retirer des cartes difficiles si présent
     if (wrongCards.has(currentCard.id)) {
       const newWrongCards = new Set(wrongCards);
       newWrongCards.delete(currentCard.id);
       setWrongCards(newWrongCards);
+      saveWrongCards(Array.from(newWrongCards));
     }
     
     handleNext();
@@ -94,12 +104,23 @@ export default function RevisionPage() {
     if (!currentCard) return;
     
     updateCardStats(currentCard.id, false);
-    setSessionStats(prev => ({ ...prev, incorrect: prev.incorrect + 1 }));
+    const newStats = { ...sessionStats, incorrect: sessionStats.incorrect + 1 };
+    setSessionStats(newStats);
+    saveSessionStats(newStats);
     
     // Ajouter aux cartes difficiles
-    setWrongCards(prev => new Set(prev).add(currentCard.id));
+    const newWrongCards = new Set(wrongCards).add(currentCard.id);
+    setWrongCards(newWrongCards);
+    saveWrongCards(Array.from(newWrongCards));
     
     handleNext();
+  };
+
+  const handleResetSessionStats = () => {
+    if (confirm('Êtes-vous sûr de vouloir réinitialiser les statistiques de session ?')) {
+      resetSessionStats();
+      setSessionStats({ correct: 0, incorrect: 0 });
+    }
   };
 
   const handleToggleFavorite = () => {
@@ -152,12 +173,24 @@ export default function RevisionPage() {
         </div>
 
         {/* Stats de session */}
-        <StatsSummary
-          totalCards={totalReviewed}
-          correctCards={sessionStats.correct}
-          incorrectCards={sessionStats.incorrect}
-          successRate={successRate}
-        />
+        <div>
+          <StatsSummary
+            totalCards={totalReviewed}
+            correctCards={sessionStats.correct}
+            incorrectCards={sessionStats.incorrect}
+            successRate={successRate}
+          />
+          {totalReviewed > 0 && (
+            <div className="mt-2 text-center">
+              <button
+                onClick={handleResetSessionStats}
+                className="px-4 py-2 text-sm bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+              >
+                🔄 Réinitialiser les stats de session
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Sélection de deck(s) */}
         <div className="mt-6 bg-white rounded-xl shadow-md p-6">
