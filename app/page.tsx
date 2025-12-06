@@ -4,14 +4,13 @@ import { useEffect, useState } from 'react';
 import { getCards, getDecks, saveCard, updateCardStats } from '../lib/storage';
 import { Deck, Flashcard } from '../lib/types';
 import { shuffle } from '../lib/utils';
-import DeckSelector from './_components/DeckSelector';
 import StatsSummary from './_components/StatsSummary';
 import ToggleSwitch from './_components/ToggleSwitch';
 
 export default function RevisionPage() {
   const [decks, setDecks] = useState<Deck[]>([]);
   const [allCards, setAllCards] = useState<Flashcard[]>([]);
-  const [selectedDeckId, setSelectedDeckId] = useState<string | null>(null);
+  const [selectedDeckIds, setSelectedDeckIds] = useState<string[]>([]);
   const [currentCards, setCurrentCards] = useState<Flashcard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showTranslation, setShowTranslation] = useState(false);
@@ -20,6 +19,7 @@ export default function RevisionPage() {
   const [onlyFavorites, setOnlyFavorites] = useState(false);
   const [wrongCards, setWrongCards] = useState<Set<string>>(new Set());
   const [sessionStats, setSessionStats] = useState({ correct: 0, incorrect: 0 });
+  const [multiSelection, setMultiSelection] = useState(false);
 
   // Charger les données au montage
   useEffect(() => {
@@ -33,16 +33,16 @@ export default function RevisionPage() {
     setAllCards(loadedCards);
     
     // Sélectionner le premier deck par défaut
-    if (loadedDecks.length > 0 && !selectedDeckId) {
-      setSelectedDeckId(loadedDecks[0].id);
+    if (loadedDecks.length > 0 && selectedDeckIds.length === 0) {
+      setSelectedDeckIds([loadedDecks[0].id]);
     }
   };
 
-  // Filtrer et mélanger les cartes quand le deck ou les filtres changent
+  // Filtrer et mélanger les cartes quand les decks ou les filtres changent
   useEffect(() => {
-    if (!selectedDeckId) return;
+    if (selectedDeckIds.length === 0) return;
 
-    let filtered = allCards.filter(card => card.deckId === selectedDeckId);
+    let filtered = allCards.filter(card => selectedDeckIds.includes(card.deckId));
     
     if (onlyFavorites) {
       filtered = filtered.filter(card => card.isFavorite);
@@ -56,7 +56,7 @@ export default function RevisionPage() {
     setCurrentCards(shuffled);
     setCurrentIndex(0);
     setShowTranslation(false);
-  }, [selectedDeckId, allCards, onlyFavorites, onlyWrong, wrongCards]);
+  }, [selectedDeckIds, allCards, onlyFavorites, onlyWrong, wrongCards]);
 
   const currentCard = currentCards[currentIndex];
 
@@ -157,22 +157,109 @@ export default function RevisionPage() {
           successRate={successRate}
         />
 
-        {/* Sélection de deck */}
+        {/* Sélection de deck(s) */}
         <div className="mt-6 bg-white rounded-xl shadow-md p-6">
-          <DeckSelector
-            decks={decks.map(d => ({
-              id: d.id,
-              name: d.name,
-              count: allCards.filter(c => c.deckId === d.id).length
-            }))}
-            selectedDeckId={selectedDeckId}
-            onSelectDeck={setSelectedDeckId}
-          />
+          <div className="mb-4 flex justify-between items-center">
+            <label className="block text-sm font-medium text-black">
+              {multiSelection ? 'Sélectionnez un ou plusieurs decks' : 'Sélectionnez un deck'}
+            </label>
+            {multiSelection && (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setSelectedDeckIds(decks.map(d => d.id))}
+                  className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                >
+                  Tout sélectionner
+                </button>
+                <button
+                  onClick={() => setSelectedDeckIds([])}
+                  className="px-3 py-1 text-sm bg-gray-300 text-black rounded hover:bg-gray-400 transition"
+                >
+                  Tout désélectionner
+                </button>
+              </div>
+            )}
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {decks.map((deck) => {
+              const cardCount = allCards.filter(c => c.deckId === deck.id).length;
+              const isSelected = selectedDeckIds.includes(deck.id);
+              
+              return (
+                <button
+                  key={deck.id}
+                  onClick={() => {
+                    if (multiSelection) {
+                      // Mode multi-sélection
+                      if (isSelected) {
+                        setSelectedDeckIds(selectedDeckIds.filter(id => id !== deck.id));
+                      } else {
+                        setSelectedDeckIds([...selectedDeckIds, deck.id]);
+                      }
+                    } else {
+                      // Mode sélection simple
+                      setSelectedDeckIds([deck.id]);
+                    }
+                  }}
+                  className={`p-4 border-2 rounded-lg transition text-left ${
+                    isSelected
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-300 hover:border-gray-400'
+                  }`}
+                >
+                  <div className="flex items-start gap-2">
+                    {multiSelection && (
+                      <div className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                        isSelected
+                          ? 'bg-blue-500 border-blue-500'
+                          : 'border-gray-300'
+                      }`}>
+                        {isSelected && (
+                          <span className="text-white text-xs">✓</span>
+                        )}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-black">{deck.name}</div>
+                      <div className="text-sm text-black mt-1">
+                        {cardCount} carte{cardCount > 1 ? 's' : ''}
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+          
+          {selectedDeckIds.length > 0 && (
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+              <p className="text-sm text-blue-900">
+                {multiSelection ? (
+                  <><strong>{selectedDeckIds.length}</strong> deck(s) sélectionné(s) • </>
+                ) : null}
+                <strong className={multiSelection ? 'ml-0' : ''}>{currentCards.length}</strong> carte(s) disponible(s)
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Options de révision */}
         <div className="mt-6 bg-white rounded-xl shadow-md p-6 space-y-3">
           <h3 className="font-semibold mb-4 text-black">Options de révision</h3>
+          <ToggleSwitch
+            label="Multi-sélection de decks"
+            description="Sélectionnez plusieurs decks pour réviser leurs cartes ensemble"
+            checked={multiSelection}
+            onChange={(value) => {
+              setMultiSelection(value);
+              // Si on désactive la multi-sélection et qu'on a plusieurs decks sélectionnés,
+              // garder seulement le premier
+              if (!value && selectedDeckIds.length > 1) {
+                setSelectedDeckIds([selectedDeckIds[0]]);
+              }
+            }}
+          />
           <ToggleSwitch
             label="Mode révision inversée"
             description="Langue natale → Langue cible"
