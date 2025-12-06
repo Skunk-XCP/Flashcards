@@ -132,7 +132,7 @@ export default function CreatePage() {
                 value={newDeckName}
                 onChange={(e) => setNewDeckName(e.target.value)}
                 placeholder="Nom du nouveau deck..."
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none mb-3"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none mb-3 text-black"
                 required
               />
               <button
@@ -177,7 +177,7 @@ export default function CreatePage() {
                   value={front}
                   onChange={(e) => setFront(e.target.value)}
                   placeholder="Ex: Hello, Bonjour, Qu'est-ce qu'une variable ?"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
                   rows={3}
                   required
                 />
@@ -191,7 +191,7 @@ export default function CreatePage() {
                   value={back}
                   onChange={(e) => setBack(e.target.value)}
                   placeholder="Ex: Bonjour, Hello, Un conteneur pour stocker des valeurs"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
                   rows={3}
                   required
                 />
@@ -236,7 +236,7 @@ export default function CreatePage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="🔍 Rechercher..."
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none w-64"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none w-64 text-black"
             />
           </div>
 

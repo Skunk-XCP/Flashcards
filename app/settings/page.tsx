@@ -155,7 +155,7 @@ export default function SettingsPage() {
                 min="1000"
                 max="30000"
                 step="500"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
               />
               <p className="text-sm text-black mt-1">
                 Temps d'attente avant de passer à la carte suivante en mode autoplay ({(settings.autoplayDelay / 1000).toFixed(1)}s)
@@ -169,7 +169,7 @@ export default function SettingsPage() {
               <select
                 value={settings.defaultRevisionMode}
                 onChange={(e) => setSettings({ ...settings, defaultRevisionMode: e.target.value as RevisionMode })}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
               >
                 <option value={RevisionMode.NORMAL}>Normal (Langue cible → Traduction)</option>
                 <option value={RevisionMode.REVERSE}>Inversé (Traduction → Langue cible)</option>
@@ -295,7 +295,7 @@ export default function SettingsPage() {
                 value={importText}
                 onChange={(e) => setImportText(e.target.value)}
                 placeholder='{"decks": [...], "cards": [...], ...}'
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono text-xs"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono text-xs text-black"
                 rows={6}
               />
             </div>
