@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { deleteCard, getCards, getDecks, saveCard, saveDeck } from '../../lib/storage';
+import { deleteCard, deleteDeck, getCards, getDecks, saveCard, saveDeck } from '../../lib/storage';
 import { Deck, Flashcard } from '../../lib/types';
 import { generateId } from '../../lib/utils';
-import DeckSelector from '../_components/DeckSelector';
 
 export default function CreatePage() {
   const [decks, setDecks] = useState<Deck[]>([]);
@@ -16,6 +15,7 @@ export default function CreatePage() {
   const [newDeckName, setNewDeckName] = useState('');
   const [showNewDeckForm, setShowNewDeckForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [editingDeckId, setEditingDeckId] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
@@ -82,18 +82,44 @@ export default function CreatePage() {
     
     if (!newDeckName.trim()) return;
 
-    const newDeck: Deck = {
-      id: generateId(),
-      name: newDeckName.trim(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    if (editingDeckId) {
+      // Mode édition
+      const deck = decks.find(d => d.id === editingDeckId);
+      if (deck) {
+        saveDeck({ ...deck, name: newDeckName.trim(), updatedAt: new Date() });
+        setEditingDeckId(null);
+      }
+    } else {
+      // Mode création
+      const newDeck: Deck = {
+        id: generateId(),
+        name: newDeckName.trim(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      saveDeck(newDeck);
+      setSelectedDeckId(newDeck.id);
+    }
 
-    saveDeck(newDeck);
     setNewDeckName('');
     setShowNewDeckForm(false);
     loadData();
-    setSelectedDeckId(newDeck.id);
+  };
+
+  const handleEditDeck = (deck: Deck) => {
+    setNewDeckName(deck.name);
+    setEditingDeckId(deck.id);
+    setShowNewDeckForm(true);
+  };
+
+  const handleDeleteDeck = (deckId: string) => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce deck et toutes ses cartes ?')) {
+      deleteDeck(deckId);
+      if (selectedDeckId === deckId) {
+        setSelectedDeckId(null);
+      }
+      loadData();
+    }
   };
 
   const filteredCards = allCards
@@ -118,7 +144,13 @@ export default function CreatePage() {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-black">Sélectionner un deck</h2>
             <button
-              onClick={() => setShowNewDeckForm(!showNewDeckForm)}
+              onClick={() => {
+                if (showNewDeckForm) {
+                  setEditingDeckId(null);
+                  setNewDeckName('');
+                }
+                setShowNewDeckForm(!showNewDeckForm);
+              }}
               className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
             >
               {showNewDeckForm ? 'Annuler' : '+ Nouveau deck'}
@@ -127,33 +159,83 @@ export default function CreatePage() {
 
           {showNewDeckForm && (
             <form onSubmit={handleCreateDeck} className="mb-4 p-4 bg-green-50 rounded-lg">
+              <label className="block text-sm font-medium mb-2 text-black">
+                {editingDeckId ? 'Modifier le nom du deck' : 'Nom du nouveau deck'}
+              </label>
               <input
                 type="text"
                 value={newDeckName}
                 onChange={(e) => setNewDeckName(e.target.value)}
-                placeholder="Nom du nouveau deck..."
+                placeholder="Nom du deck..."
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none mb-3 text-black"
                 required
               />
-              <button
-                type="submit"
-                className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-              >
-                Créer le deck
-              </button>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                >
+                  {editingDeckId ? '💾 Enregistrer' : '➕ Créer le deck'}
+                </button>
+                {editingDeckId && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingDeckId(null);
+                      setNewDeckName('');
+                      setShowNewDeckForm(false);
+                    }}
+                    className="px-6 py-2 bg-gray-300 text-black rounded-lg hover:bg-gray-400 transition"
+                  >
+                    Annuler
+                  </button>
+                )}
+              </div>
             </form>
           )}
 
           {decks.length > 0 ? (
-            <DeckSelector
-              decks={decks.map(d => ({
-                id: d.id,
-                name: d.name,
-                count: allCards.filter(c => c.deckId === d.id).length
-              }))}
-              selectedDeckId={selectedDeckId}
-              onSelectDeck={setSelectedDeckId}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {decks.map((deck) => {
+                const cardCount = allCards.filter(c => c.deckId === deck.id).length;
+                return (
+                  <div
+                    key={deck.id}
+                    className={`p-4 border-2 rounded-lg transition ${
+                      selectedDeckId === deck.id
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <div 
+                        onClick={() => setSelectedDeckId(deck.id)}
+                        className="flex-1 cursor-pointer"
+                      >
+                        <div className="font-semibold text-black">{deck.name}</div>
+                        <div className="text-sm text-black mt-1">
+                          {cardCount} carte{cardCount > 1 ? 's' : ''}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 mt-3">
+                      <button
+                        onClick={() => handleEditDeck(deck)}
+                        className="flex-1 px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                      >
+                        ✏️ Éditer
+                      </button>
+                      <button
+                        onClick={() => handleDeleteDeck(deck.id)}
+                        className="flex-1 px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
+                      >
+                        🗑️ Supprimer
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           ) : (
             <p className="text-black text-center py-4">
               Aucun deck disponible. Créez-en un pour commencer !
