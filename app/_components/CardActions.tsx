@@ -50,7 +50,7 @@ export default function CardActions({
           className={`px-6 py-2 rounded transition ${
             isFavorite
               ? 'bg-yellow-500 text-white hover:bg-yellow-600'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              : 'bg-gray-200 text-black hover:bg-gray-300'
           }`}
         >
           {isFavorite ? '⭐ Favori' : '☆ Ajouter aux favoris'}

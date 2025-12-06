@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import ClientLayout from "./ClientLayout";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Flashcards App",
-  description: "Application de révision avec flashcards",
+  title: "Flashcards App - Apprenez efficacement",
+  description: "Application de révision avec flashcards pour apprendre les langues et plus encore",
 };
 
 export default function RootLayout({
@@ -27,7 +28,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );

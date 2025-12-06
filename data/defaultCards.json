@@ -9,8 +9,8 @@
     },
     {
       "id": "deck-2",
-      "name": "Espagnol - Verbes courants",
-      "description": "Conjugaison des verbes espagnols",
+      "name": "Japonais - Vocabulaire de base",
+      "description": "Mots essentiels en japonais",
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
     },
@@ -70,8 +70,8 @@
     },
     {
       "id": "card-6",
-      "front": "Hablar (présent, yo)",
-      "back": "Hablo",
+      "front": "こんにちは (konnichiwa)",
+      "back": "Bonjour",
       "deckId": "deck-2",
       "isFavorite": false,
       "createdAt": "2024-01-01T00:00:00.000Z",
@@ -79,8 +79,8 @@
     },
     {
       "id": "card-7",
-      "front": "Comer (présent, tú)",
-      "back": "Comes",
+      "front": "ありがとう (arigatou)",
+      "back": "Merci",
       "deckId": "deck-2",
       "isFavorite": false,
       "createdAt": "2024-01-01T00:00:00.000Z",
@@ -88,8 +88,8 @@
     },
     {
       "id": "card-8",
-      "front": "Vivir (présent, él/ella)",
-      "back": "Vive",
+      "front": "さようなら (sayounara)",
+      "back": "Au revoir",
       "deckId": "deck-2",
       "isFavorite": true,
       "createdAt": "2024-01-01T00:00:00.000Z",

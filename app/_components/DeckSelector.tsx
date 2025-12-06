@@ -13,7 +13,7 @@ export default function DeckSelector({
 }: DeckSelectorProps) {
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium">
+      <label className="block text-sm font-medium text-black">
         Sélectionnez un deck
       </label>
       
@@ -28,8 +28,8 @@ export default function DeckSelector({
                 : 'border-gray-300 hover:border-gray-400'
             }`}
           >
-            <div className="font-semibold">{deck.name}</div>
-            <div className="text-sm text-gray-600 mt-1">
+            <div className="font-semibold text-black">{deck.name}</div>
+            <div className="text-sm text-black mt-1">
               {deck.count} carte{deck.count > 1 ? 's' : ''}
             </div>
           </button>

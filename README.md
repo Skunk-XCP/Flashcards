@@ -90,6 +90,40 @@ Les données sont stockées localement dans le navigateur via **localStorage** :
 - **Tailwind CSS** - Styling
 - **localStorage** - Persistance des données
 
+## ✨ Fonctionnalités implémentées
+
+### 🎴 Révision
+- ✅ Tirage de carte aléatoire
+- ✅ Système ✔️/✖️ (réussite/échec)
+- ✅ Mode révision inversée
+- ✅ Mode "cartes ratées uniquement"
+- ✅ Mode favoris ⭐
+- ✅ Shuffle intelligent
+- ✅ Statistiques de session en temps réel
+- ✅ Design minimaliste et élégant avec excellent contraste
+
+### ✨ Création
+- ✅ Double input (langue cible + traduction)
+- ✅ Gestion des decks/catégories
+- ✅ Modification et suppression de cartes
+- ✅ Recherche dans les flashcards
+- ✅ Organisation par collections
+
+### 📊 Statistiques
+- ✅ Nombre de cartes apprises
+- ✅ % de réussite global
+- ✅ Nombre total de cartes
+- ✅ Cartes les plus difficiles
+- ✅ Filtrage par deck
+- ✅ Détail par deck
+
+### ⚙️ Paramètres
+- ✅ Import/Export JSON
+- ✅ Téléchargement de backup
+- ✅ Configuration du délai autoplay
+- ✅ Mode de révision par défaut
+- ✅ Suppression de toutes les données
+
 ## 📦 Données par défaut
 
 L'application inclut des decks de démonstration :

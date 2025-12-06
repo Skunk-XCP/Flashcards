@@ -16,9 +16,9 @@ export default function ToggleSwitch({
   return (
     <div className="flex items-center justify-between p-3 border border-gray-300 rounded-lg">
       <div className="flex-1">
-        <div className="font-medium">{label}</div>
+        <div className="font-medium text-black">{label}</div>
         {description && (
-          <div className="text-sm text-gray-600 mt-1">{description}</div>
+          <div className="text-sm text-black mt-1">{description}</div>
         )}
       </div>
       
