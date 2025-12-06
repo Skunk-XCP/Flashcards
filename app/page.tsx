@@ -20,6 +20,8 @@ export default function RevisionPage() {
   const [wrongCards, setWrongCards] = useState<Set<string>>(new Set());
   const [sessionStats, setSessionStats] = useState({ correct: 0, incorrect: 0 });
   const [multiSelection, setMultiSelection] = useState(false);
+  const [showDeckSelection, setShowDeckSelection] = useState(true);
+  const [showOptions, setShowOptions] = useState(true);
 
   // Charger les données au montage
   useEffect(() => {
@@ -159,11 +161,15 @@ export default function RevisionPage() {
 
         {/* Sélection de deck(s) */}
         <div className="mt-6 bg-white rounded-xl shadow-md p-6">
-          <div className="mb-4 flex justify-between items-center">
-            <label className="block text-sm font-medium text-black">
-              {multiSelection ? 'Sélectionnez un ou plusieurs decks' : 'Sélectionnez un deck'}
-            </label>
-            {multiSelection && (
+          <div className="flex justify-between items-center mb-4">
+            <button
+              onClick={() => setShowDeckSelection(!showDeckSelection)}
+              className="flex items-center gap-2 text-lg font-semibold text-black hover:text-blue-600 transition"
+            >
+              <span>{showDeckSelection ? '▼' : '▶'}</span>
+              <span>{multiSelection ? 'Sélectionnez un ou plusieurs decks' : 'Sélectionnez un deck'}</span>
+            </button>
+            {multiSelection && showDeckSelection && (
               <div className="flex gap-2">
                 <button
                   onClick={() => setSelectedDeckIds(decks.map(d => d.id))}
@@ -181,7 +187,8 @@ export default function RevisionPage() {
             )}
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {showDeckSelection && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
             {decks.map((deck) => {
               const cardCount = allCards.filter(c => c.deckId === deck.id).length;
               const isSelected = selectedDeckIds.includes(deck.id);
@@ -231,8 +238,9 @@ export default function RevisionPage() {
               );
             })}
           </div>
+          )}
           
-          {selectedDeckIds.length > 0 && (
+          {selectedDeckIds.length > 0 && showDeckSelection && (
             <div className="mt-4 p-3 bg-blue-50 rounded-lg">
               <p className="text-sm text-blue-900">
                 {multiSelection ? (
@@ -245,8 +253,17 @@ export default function RevisionPage() {
         </div>
 
         {/* Options de révision */}
-        <div className="mt-6 bg-white rounded-xl shadow-md p-6 space-y-3">
-          <h3 className="font-semibold mb-4 text-black">Options de révision</h3>
+        <div className="mt-6 bg-white rounded-xl shadow-md p-6">
+          <button
+            onClick={() => setShowOptions(!showOptions)}
+            className="flex items-center gap-2 text-lg font-semibold text-black hover:text-blue-600 transition mb-4"
+          >
+            <span>{showOptions ? '▼' : '▶'}</span>
+            <span>Options de révision</span>
+          </button>
+          
+          {showOptions && (
+          <div className="space-y-3">
           <ToggleSwitch
             label="Multi-sélection de decks"
             description="Sélectionnez plusieurs decks pour réviser leurs cartes ensemble"
@@ -278,6 +295,8 @@ export default function RevisionPage() {
             checked={onlyFavorites}
             onChange={setOnlyFavorites}
           />
+          </div>
+          )}
         </div>
 
         {/* Zone de carte */}
