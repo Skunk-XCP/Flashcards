@@ -11,6 +11,7 @@ export default function CreatePage() {
   const [selectedDeckId, setSelectedDeckId] = useState<string | null>(null);
   const [front, setFront] = useState('');
   const [back, setBack] = useState('');
+  const [context, setContext] = useState('');
   const [editingCardId, setEditingCardId] = useState<string | null>(null);
   const [newDeckName, setNewDeckName] = useState('');
   const [showNewDeckForm, setShowNewDeckForm] = useState(false);
@@ -42,12 +43,14 @@ export default function CreatePage() {
           ...allCards.find(c => c.id === editingCardId)!,
           front: front.trim(),
           back: back.trim(),
+          context: context.trim() || undefined,
           updatedAt: new Date(),
         }
       : {
           id: generateId(),
           front: front.trim(),
           back: back.trim(),
+          context: context.trim() || undefined,
           deckId: selectedDeckId,
           isFavorite: false,
           createdAt: new Date(),
@@ -59,12 +62,14 @@ export default function CreatePage() {
     
     setFront('');
     setBack('');
+    setContext('');
     setEditingCardId(null);
   };
 
   const handleEditCard = (card: Flashcard) => {
     setFront(card.front);
     setBack(card.back);
+    setContext(card.context || '');
     setEditingCardId(card.id);
     setSelectedDeckId(card.deckId);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -128,7 +133,8 @@ export default function CreatePage() {
       if (!searchQuery) return true;
       const query = searchQuery.toLowerCase();
       return card.front.toLowerCase().includes(query) || 
-             card.back.toLowerCase().includes(query);
+             card.back.toLowerCase().includes(query) ||
+             (card.context && card.context.toLowerCase().includes(query));
     });
 
   return (
@@ -279,6 +285,19 @@ export default function CreatePage() {
                 />
               </div>
 
+              <div>
+                <label className="block text-sm font-medium mb-2 text-black">
+                  Contexte / Sens <span className="text-gray-500 text-xs">(optionnel)</span>
+                </label>
+                <textarea
+                  value={context}
+                  onChange={(e) => setContext(e.target.value)}
+                  placeholder="Ex: Expression idiomatique, Utilisé en début de phrase, etc."
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
+                  rows={2}
+                />
+              </div>
+
               <div className="flex gap-3">
                 <button
                   type="submit"
@@ -293,6 +312,7 @@ export default function CreatePage() {
                     onClick={() => {
                       setFront('');
                       setBack('');
+                      setContext('');
                       setEditingCardId(null);
                     }}
                     className="px-6 py-3 bg-gray-300 text-black rounded-lg hover:bg-gray-400 transition"
@@ -338,6 +358,13 @@ export default function CreatePage() {
                     <div className="text-sm text-black mb-1">Réponse</div>
                     <div className="text-black">{card.back}</div>
                   </div>
+
+                  {card.context && (
+                    <div className="mb-3">
+                      <div className="text-sm text-black mb-1">Contexte / Sens</div>
+                      <div className="text-sm text-gray-600 italic">{card.context}</div>
+                    </div>
+                  )}
 
                   <div className="flex gap-2 mt-4">
                     <button

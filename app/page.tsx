@@ -351,12 +351,29 @@ export default function RevisionPage() {
                   onClick={() => setShowTranslation(!showTranslation)}
                   className="w-full max-w-md h-64 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl shadow-xl cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-105 flex items-center justify-center p-8"
                 >
-                  <p className="text-3xl font-bold text-white text-center">
-                    {showTranslation 
-                      ? (isReversed ? currentCard.front : currentCard.back)
-                      : (isReversed ? currentCard.back : currentCard.front)
-                    }
-                  </p>
+                  {!showTranslation ? (
+                    <p className="text-3xl font-bold text-white text-center">
+                      {isReversed ? currentCard.back : currentCard.front}
+                    </p>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center gap-4">
+                      <p className="text-3xl font-bold text-white text-center">
+                        {isReversed ? currentCard.back : currentCard.front}
+                      </p>
+                      <div className="w-16 h-px bg-white opacity-50"></div>
+                      <p className="text-2xl font-semibold text-white text-center opacity-90">
+                        {isReversed ? currentCard.front : currentCard.back}
+                      </p>
+                      {currentCard.context && (
+                        <>
+                          <div className="w-12 h-px bg-white opacity-30 mt-2"></div>
+                          <p className="text-sm text-white text-center opacity-75 italic max-w-xs">
+                            {currentCard.context}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 

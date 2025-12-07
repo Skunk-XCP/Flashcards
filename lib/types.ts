@@ -2,6 +2,7 @@ export interface Flashcard {
   id: string;
   front: string;
   back: string;
+  context?: string;
   deckId: string;
   isFavorite: boolean;
   createdAt: Date;
